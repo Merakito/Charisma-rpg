@@ -13,15 +13,16 @@ def get_sheet():
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
     client = gspread.authorize(creds)
     return client.open("Charisma_RPG_Data").worksheet("Data")
-
 def load_game():
     try:
         sheet = get_sheet()
-        data = sheet.acell('B2').value # Get the JSON string from cell B2
+        data = sheet.acell('B2').value 
         if data:
             return json.loads(data)
-    except: pass
-    return {"level": 1, "total_xp": 0, "mana": 100, "api_key": "", "branch_xp": {"Acting": 0, "Charisma": 0, "Storytelling": 0, "Practice": 0}, "directors_notes": {}}
+        return {"level": 1, "total_xp": 0, "mana": 100, "api_key": "", "branch_xp": {"Acting": 0, "Charisma": 0, "Storytelling": 0, "Practice": 0}, "directors_notes": {}}
+    except Exception as e:
+        st.error(f"Vault Loading Error: {e}") # This will force the error to show up on screen
+        return {"level": 1, "total_xp": 0, "mana": 100, "api_key": "", "branch_xp": {"Acting": 0, "Charisma": 0, "Storytelling": 0, "Practice": 0}, "directors_notes": {}}
 
 def save_game():
     sheet = get_sheet()
